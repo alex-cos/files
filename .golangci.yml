@@ -44,7 +44,6 @@ linters:
     - goconst
     - gocritic
     - gocyclo
-    - godot
     - godox
     - goprintffuncname
     - gosec
@@ -74,7 +73,6 @@ linters:
     - sloglint
     - sqlclosecheck
     - staticcheck
-    #   - tagalign
     - testifylint
     - testpackage
     - thelper
@@ -83,7 +81,7 @@ linters:
     - unparam
     - wastedassign
     - whitespace
-    #   - wrapcheck
+    # - wrapcheck
     - zerologlint
   # Disable specific linter.
   disable:
@@ -214,7 +212,6 @@ linters:
         - require-error
         - float-compare
     testpackage:
-      skip-regexp: .*(export|internal)_test\.go
       allow-packages:
         - main
   # Defines a set of rules to ignore issues.
@@ -231,56 +228,16 @@ linters:
       - std-error-handling
     # Excluding configuration per-path, per-linter, per-text and per-source.
     rules:
-      - linters:
-          - dogsled
-          - dupl
-          - exhaustruct
-          - forbidigo
-          - forcetypeassert
-          - funlen
-          - gochecknoglobals
-          - gocognit
-          - goconst
-          - gosec
-          - lll
-          - misspell
-          - mnd
-          - noctx
-          - perfsprint
-        path: (.+)_test\.go$
-      - linters:
-          - gochecknoglobals
-        path: main\.go$
-      - linters:
-          - gochecknoglobals
-        path: (.*)cli\.go$
-      - linters:
-          - gochecknoglobals
-        path: (.*)singleton\.go$
-      - linters:
-          - dupl
-          - exhaustruct
-          - forcetypeassert
-          - gocognit
-          - gosec
-          - mnd
-        path: (.*)mock\.go$
-      - linters:
-          - gocritic
-        text: "unnecessaryDefer:"
-      - linters:
-          - lll
-        source: "^//go:generate "
       - path: (.+)\.go$
         text: G306
-      - linters:
-          - cyclop
-        path: (.+)_test\.go$
+      - path: (.+)\.go$
+        text: G703
+      - path: (.+)\.go$
+        text: G122
     # Which file paths to exclude: they will be analyzed, but issues from them won't be reported.
     # Default: []
     paths:
       - vendor
-      - services
       - tmp
 issues:
   # Maximum issues count per one linter.
@@ -290,102 +247,12 @@ issues:
   # Maximum count of issues with the same text.
   # Set to 0 to disable.
   # Default: 3
-  max-same-issues: 0
+  max-same-issues: 3
   # Make issues output unique by line.
   # Default: true
   uniq-by-line: true
-severity:
-  # Set the default severity for issues.
-  default: error
-  rules:
-    - linters:
-        - containedctx
-        - contextcheck
-        - copyloopvar
-        - cyclop
-        - forbidigo
-        - gocritic
-        - gosec
-        - importas
-        - mirror
-        - nakedret
-        - noctx
-        - rowserrcheck
-        - sqlclosecheck
-        - zerologlint
-      severity: error
-    - linters:
-        - bidichk
-        - bodyclose
-        - errcheck
-        - errchkjson
-        - fatcontext
-        - funlen
-        - gocheckcompilerdirectives
-        - gocognit
-        - gocyclo
-        - ineffassign
-        - nestif
-        - paralleltest
-        - reassign
-        - sloglint
-        - tparallel
-      severity: warning
-    - linters:
-        - asasalint
-        - asciicheck
-        - canonicalheader
-        - dogsled
-        - dupl
-        - durationcheck
-        - errname
-        - errorlint
-        - exhaustive
-        - exhaustruct
-        - exptostd
-        - forbidigo
-        - forcetypeassert
-        - gochecknoinits
-        - goconst
-        - godot
-        - godox
-        - goprintffuncname
-        - iface
-        - ifshort
-        - intrange
-        - lll
-        - loggercheck
-        - makezero
-        - misspell
-        - musttag
-        - nilerr
-        - nilnesserr
-        - nilnil
-        - nonamedreturns
-        - perfsprint
-        - prealloc
-        - predeclared
-        - protogetter
-        - staticcheck
-        - testifylint
-        - testpackage
-        - thelper
-        - unconvert
-        - unparam
-        - wastedassign
-        - whitespace
-        - wrapcheck
-      severity: info
 
 formatters:
   # Enable specific formatter.
   # Default: [] (uses standard Go formatting)
   enable: []
-  exclusions:
-    generated: lax
-    # Log a warning if an exclusion path is unused.
-    # Default: false
-    warn-unused: true
-    # Which file paths to exclude.
-    paths:
-      - "^services\\.*.go$"

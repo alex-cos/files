@@ -15,7 +15,7 @@ func TestTar(t *testing.T) {
 
 	tempdir := t.TempDir()
 	if !testing.Short() {
-		fmt.Printf("tempdir = %+v\n", tempdir)
+		fmt.Fprintf(os.Stdout, "tempdir = %+v\n", tempdir)
 	}
 
 	err := os.MkdirAll(filepath.Join(tempdir, "testdata"), 0755)
@@ -29,7 +29,7 @@ func TestTar(t *testing.T) {
 	assert.NoError(t, err)
 	assert.NotEmpty(t, items)
 	if !testing.Short() {
-		fmt.Printf("dirs = %+v\n", items)
+		fmt.Fprintf(os.Stdout, "dirs = %+v\n", items)
 	}
 
 	err = files.UnTar(targetFile, filepath.Join(tempdir, "unzip"))

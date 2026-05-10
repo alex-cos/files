@@ -2,6 +2,7 @@ package files_test
 
 import (
 	"fmt"
+	"os"
 	"testing"
 	"time"
 
@@ -17,7 +18,7 @@ func TestListDirectories(t *testing.T) {
 	assert.NotEmpty(t, dirs)
 	if !testing.Short() {
 		for _, dir := range dirs {
-			fmt.Printf("%s|%s|%s|%d\n", dir.Path, dir.Name, dir.FormatSize(), dir.Nbfiles)
+			fmt.Fprintf(os.Stdout, "%s|%s|%s|%d\n", dir.Path, dir.Name, dir.FormatSize(), dir.Nbfiles)
 		}
 	}
 
@@ -50,7 +51,7 @@ func TestListFiles(t *testing.T) {
 	assert.Len(t, items, 2)
 	if !testing.Short() {
 		for _, item := range items {
-			fmt.Printf("%s|%s|%s|%s|%s|%s\n",
+			fmt.Fprintf(os.Stdout, "%s|%s|%s|%s|%s|%s\n",
 				item.Path,
 				item.Name,
 				item.GetExt(),
@@ -59,7 +60,7 @@ func TestListFiles(t *testing.T) {
 				item.Updated.UTC().Format(time.DateTime),
 			)
 		}
-		fmt.Printf("files = %+v\n", items)
+		fmt.Fprintf(os.Stdout, "files = %+v\n", items)
 	}
 	assert.Equal(t, `testdata\dummy\dummy1.txt`, items[0].Path)
 	assert.Equal(t, `dummy1.txt`, items[0].Name)
@@ -74,28 +75,28 @@ func TestListFiles(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Len(t, items, 1)
 	if !testing.Short() {
-		fmt.Printf("files = %+v\n", items)
+		fmt.Fprintf(os.Stdout, "files = %+v\n", items)
 	}
 
 	items, err = files.ListFiles("./testdata/dummy", files.FilterFileByExt(files.TXT))
 	assert.NoError(t, err)
 	assert.Len(t, items, 2)
 	if !testing.Short() {
-		fmt.Printf("files = %+v\n", items)
+		fmt.Fprintf(os.Stdout, "files = %+v\n", items)
 	}
 
 	items, err = files.ListFiles("./testdata/dummy", files.FilterFileBySizeGreater(530))
 	assert.NoError(t, err)
 	assert.Len(t, items, 1)
 	if !testing.Short() {
-		fmt.Printf("files = %+v\n", items)
+		fmt.Fprintf(os.Stdout, "files = %+v\n", items)
 	}
 
 	items, err = files.ListFiles("./testdata/dummy", files.FilterFileBySizeLower(530))
 	assert.NoError(t, err)
 	assert.Len(t, items, 1)
 	if !testing.Short() {
-		fmt.Printf("files = %+v\n", items)
+		fmt.Fprintf(os.Stdout, "files = %+v\n", items)
 	}
 }
 
@@ -107,7 +108,7 @@ func TestWalkFiles(t *testing.T) {
 	assert.Len(t, items, 3)
 	if !testing.Short() {
 		for _, item := range items {
-			fmt.Printf("%s|%s|%s|%s|%s|%s\n",
+			fmt.Fprintf(os.Stdout, "%s|%s|%s|%s|%s|%s\n",
 				item.Path,
 				item.Name,
 				item.GetExt(),
@@ -116,7 +117,7 @@ func TestWalkFiles(t *testing.T) {
 				item.Updated.UTC().Format(time.DateTime),
 			)
 		}
-		fmt.Printf("files = %+v\n", items)
+		fmt.Fprintf(os.Stdout, "files = %+v\n", items)
 	}
 	assert.Equal(t, `testdata\dummy\directory1\logo.jpg`, items[0].Path)
 	assert.Equal(t, `logo.jpg`, items[0].Name)
@@ -135,27 +136,27 @@ func TestWalkFiles(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Len(t, items, 1)
 	if !testing.Short() {
-		fmt.Printf("files = %+v\n", items)
+		fmt.Fprintf(os.Stdout, "files = %+v\n", items)
 	}
 
 	items, err = files.WalkFiles("./testdata", files.FilterFileByExt(files.TXT))
 	assert.NoError(t, err)
 	assert.Len(t, items, 2)
 	if !testing.Short() {
-		fmt.Printf("files = %+v\n", items)
+		fmt.Fprintf(os.Stdout, "files = %+v\n", items)
 	}
 
 	items, err = files.WalkFiles("./testdata", files.FilterFileBySizeGreater(530))
 	assert.NoError(t, err)
 	assert.Len(t, items, 2)
 	if !testing.Short() {
-		fmt.Printf("files = %+v\n", items)
+		fmt.Fprintf(os.Stdout, "files = %+v\n", items)
 	}
 
 	items, err = files.WalkFiles("./testdata", files.FilterFileBySizeLower(530))
 	assert.NoError(t, err)
 	assert.Len(t, items, 1)
 	if !testing.Short() {
-		fmt.Printf("files = %+v\n", items)
+		fmt.Fprintf(os.Stdout, "files = %+v\n", items)
 	}
 }

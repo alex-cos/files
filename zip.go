@@ -32,7 +32,7 @@ func UnZip(zipfile, dest string) error {
 	defer archive.Close()
 
 	for _, file := range archive.File {
-		path, err := sanitizeArchivePath(dest, file.Name)
+		path, err := sanitizeFilePath(dest, file.Name)
 		if err != nil {
 			return err
 		}

@@ -8,12 +8,13 @@ import (
 
 const maxDecompressedSize = 1 << 20 // 1 Megabyte = 1024 * 1024 bytes
 
-// Sanitize archive file pathing from "G305: Zip Slip vulnerability".
-func sanitizeArchivePath(path, file string) (string, error) {
-	v := filepath.Join(path, file)
-	if strings.HasPrefix(v, filepath.Clean(path)) {
+// Sanitize file pathing from Zip Slip vulnerability G305 and
+// path traversal attacks G703.
+func sanitizeFilePath(base, subPath string) (string, error) {
+	v := filepath.Join(base, subPath)
+	if strings.HasPrefix(v, filepath.Clean(base)) {
 		return v, nil
 	}
 
-	return "", fmt.Errorf("content filepath is tainted: %s", file)
+	return "", fmt.Errorf("filepath is tainted: %s", subPath)
 }

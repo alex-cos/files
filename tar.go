@@ -54,7 +54,7 @@ func UnTar(tarfile, dest string) error {
 		if hdr == nil {
 			continue
 		}
-		path, err := sanitizeArchivePath(dest, hdr.Name)
+		path, err := sanitizeFilePath(dest, hdr.Name)
 		if err != nil {
 			return err
 		}

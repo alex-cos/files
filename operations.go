@@ -15,7 +15,7 @@ import (
 	"time"
 )
 
-// CopyFile - copy a source file to a destination file or directory.
+// CopyFile copies a source file to a destination file or directory.
 func CopyFile(src, dst string) error {
 	var source = filepath.Clean(src)
 
@@ -51,7 +51,7 @@ func CopyFile(src, dst string) error {
 	return nil
 }
 
-// ConcatFiles - concatenate all given files into one.
+// ConcatFiles concatenates all given files into one.
 func ConcatFiles(sources []string, dst string, perm os.FileMode) error {
 	var buffer []byte
 
@@ -87,7 +87,7 @@ func ConcatFiles(sources []string, dst string, perm os.FileMode) error {
 	return nil
 }
 
-// ConcatDir - concatenate all files of the same type located in a source directory.
+// ConcatDir concatenates all files matching the given filter in a source directory.
 func ConcatDir(src, dst string, filter FilterFile, perm os.FileMode) error {
 	var source = filepath.Clean(src)
 	var buffer []byte
@@ -150,7 +150,7 @@ func ConcatDir(src, dst string, filter FilterFile, perm os.FileMode) error {
 	return nil
 }
 
-// CopyDir - copy the entires source directory and sub-directories to a destination directory.
+// CopyDir copies the entire source directory and sub-directories to a destination directory.
 func CopyDir(src, dst string) error {
 	src = filepath.Clean(src)
 	dst = filepath.Clean(dst)
@@ -204,7 +204,7 @@ func CopyDir(src, dst string) error {
 	return nil
 }
 
-// DeleteFile - delete a single file.
+// DeleteFile removes a single file.
 func DeleteFile(path string) error {
 	source := filepath.Clean(path)
 
@@ -220,7 +220,7 @@ func DeleteFile(path string) error {
 	return os.Remove(source)
 }
 
-// DeleteDir - delete a directory and all its contents recursively.
+// DeleteDir removes a directory and all its contents recursively.
 func DeleteDir(path string) error {
 	source := filepath.Clean(path)
 
@@ -236,7 +236,7 @@ func DeleteDir(path string) error {
 	return os.RemoveAll(source)
 }
 
-// FileHash - calculate hash of a file using specified algorithm (md5, sha1, sha256, sha512).
+// FileHash calculates the hash of a file using the specified algorithm (md5, sha1, sha256, sha512).
 func FileHash(path, algo string) (string, error) {
 	source := filepath.Clean(path)
 
@@ -278,7 +278,7 @@ func FileHash(path, algo string) (string, error) {
 	return hex.EncodeToString(hashBytes), nil
 }
 
-// GetDirStats - calculate statistics for a directory (total files, size, oldest/newest file).
+// GetDirStats calculates statistics for a directory (total files, size, oldest/newest file).
 func GetDirStats(dir string) (*DirStats, error) {
 	source := filepath.Clean(dir)
 

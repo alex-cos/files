@@ -5,6 +5,9 @@ import (
 	"path/filepath"
 )
 
+// ListDirectories lists all directories recursively within the given directory.
+// It returns a slice of DirInfo for each directory found. If a filter is provided,
+// only directories matching the filter are returned.
 func ListDirectories(directory string, filter FilterDir) ([]*DirInfo, error) {
 	dirs := []*DirInfo{}
 	nbFiles := int64(0)
@@ -49,6 +52,9 @@ func ListDirectories(directory string, filter FilterDir) ([]*DirInfo, error) {
 	return dirs, nil
 }
 
+// ListFiles lists all files within the given directory.
+// It returns a slice of FileInfo for each file found. If a filter is provided,
+// only files matching the filter are returned.
 func ListFiles(directory string, filter FilterFile) ([]*FileInfo, error) {
 	files := []*FileInfo{}
 
@@ -85,6 +91,9 @@ func ListFiles(directory string, filter FilterFile) ([]*FileInfo, error) {
 	return files, nil
 }
 
+// WalkFiles recursively walks through a directory and lists all files.
+// It returns a slice of FileInfo for each file found. If a filter is provided,
+// only files matching the filter are returned.
 func WalkFiles(directory string, filter FilterFile) ([]*FileInfo, error) {
 	files := []*FileInfo{}
 

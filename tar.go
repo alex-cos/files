@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 )
 
+// TarList lists all files contained in a TAR archive.
 func TarList(tarfile string) ([]string, error) {
 	files := []string{}
 
@@ -35,6 +36,7 @@ func TarList(tarfile string) ([]string, error) {
 	return files, nil
 }
 
+// UnTar extracts a TAR archive to the destination directory.
 func UnTar(tarfile, dest string) error {
 	inFile, err := os.Open(tarfile)
 	if err != nil {
@@ -88,6 +90,7 @@ func UnTar(tarfile, dest string) error {
 	return nil
 }
 
+// TarAll creates a TAR archive from a source folder.
 func TarAll(baseFolder, tarfile string) error {
 	outFile, err := os.Create(tarfile)
 	if err != nil {
@@ -110,7 +113,7 @@ func TarAll(baseFolder, tarfile string) error {
 	return nil
 }
 
-// addToTar - tar all files from a direcotory recursively.
+// addToTar recursively adds files from a directory to a TAR archive.
 func addToTar(writer *tar.Writer, basePath, baseInTar string) error {
 	files, err := os.ReadDir(basePath)
 	if err != nil {

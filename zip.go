@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 )
 
+// ZipList lists all files contained in a ZIP archive.
 func ZipList(zipfile string) ([]string, error) {
 	files := []string{}
 
@@ -24,6 +25,7 @@ func ZipList(zipfile string) ([]string, error) {
 	return files, nil
 }
 
+// UnZip extracts a ZIP archive to the destination directory.
 func UnZip(zipfile, dest string) error {
 	archive, err := zip.OpenReader(zipfile)
 	if err != nil {
@@ -72,6 +74,7 @@ func UnZip(zipfile, dest string) error {
 	return nil
 }
 
+// ZipAll creates a ZIP archive from a source folder.
 func ZipAll(baseFolder, zipfile string) error {
 	outFile, err := os.Create(zipfile)
 	if err != nil {
@@ -94,7 +97,7 @@ func ZipAll(baseFolder, zipfile string) error {
 	return nil
 }
 
-// addToZip - zip all files from a direcotory recursively.
+// addToZip recursively adds files from a directory to a ZIP archive.
 func addToZip(writer *zip.Writer, basePath, baseInZip string) error {
 	files, err := os.ReadDir(basePath)
 	if err != nil {

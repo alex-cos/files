@@ -1,5 +1,6 @@
 package files
 
+// FileDesc describes a file type with its properties.
 type FileDesc struct {
 	Name         string
 	Category     string
@@ -2081,11 +2082,13 @@ var fileDescriptions = map[string]FileDesc{
 	},
 }
 
+// GetFileDesc returns the file description for a given extension.
 func GetFileDesc(ext string) (FileDesc, bool) {
 	fd, ok := fileDescriptions[ext]
 	return fd, ok
 }
 
+// GetFileDescName returns the human-readable name for a given extension.
 func GetFileDescName(ext string) string {
 	if fd, ok := fileDescriptions[ext]; ok {
 		return fd.Name
@@ -2093,6 +2096,7 @@ func GetFileDescName(ext string) string {
 	return "Unknown"
 }
 
+// GetFileDescCat returns the category for a given extension.
 func GetFileDescCat(ext string) string {
 	if fd, ok := fileDescriptions[ext]; ok {
 		return fd.Category
@@ -2100,6 +2104,7 @@ func GetFileDescCat(ext string) string {
 	return "Unknown"
 }
 
+// IsFileBinary returns whether a file with the given extension is binary.
 func IsFileBinary(ext string) *bool {
 	if fd, ok := fileDescriptions[ext]; ok {
 		return &fd.IsBinary
@@ -2107,6 +2112,7 @@ func IsFileBinary(ext string) *bool {
 	return nil
 }
 
+// IsFileCompressed returns whether a file with the given extension is typically compressed.
 func IsFileCompressed(ext string) *bool {
 	if fd, ok := fileDescriptions[ext]; ok {
 		return &fd.IsCompressed
@@ -2114,6 +2120,7 @@ func IsFileCompressed(ext string) *bool {
 	return nil
 }
 
+// IsFileExecutable returns whether a file with the given extension is executable.
 func IsFileExecutable(ext string) *bool {
 	if fd, ok := fileDescriptions[ext]; ok {
 		return &fd.IsExecutable
@@ -2121,6 +2128,7 @@ func IsFileExecutable(ext string) *bool {
 	return nil
 }
 
+// GetMimeType returns the MIME type for a given extension.
 func GetMimeType(ext string) string {
 	if fd, ok := fileDescriptions[ext]; ok {
 		return fd.MimeType

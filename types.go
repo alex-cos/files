@@ -6,6 +6,7 @@ import (
 	"time"
 )
 
+// DirInfo represents information about a directory.
 type DirInfo struct {
 	Path    string
 	Name    string
@@ -13,16 +14,20 @@ type DirInfo struct {
 	Size    int64
 }
 
+// FilterDir is a function type for filtering directories.
 type FilterDir func(f *DirInfo) bool
 
+// String returns a string representation of the DirInfo.
 func (item *DirInfo) String() string {
 	return fmt.Sprintf("%+v", *item)
 }
 
+// FormatSize returns a human-readable string representation of the directory size.
 func (item *DirInfo) FormatSize() string {
 	return FormatSize(item.Size)
 }
 
+// FileInfo represents information about a file.
 type FileInfo struct {
 	Path    string
 	Name    string
@@ -32,20 +37,25 @@ type FileInfo struct {
 	Updated time.Time
 }
 
+// String returns a string representation of the FileInfo.
 func (item *FileInfo) String() string {
 	return fmt.Sprintf("%+v", *item)
 }
 
+// FormatSize returns a human-readable string representation of the file size.
 func (item *FileInfo) FormatSize() string {
 	return FormatSize(item.Size)
 }
 
+// GetExt returns the file extension in lowercase without the leading dot.
 func (item *FileInfo) GetExt() string {
 	return strings.ToLower(strings.TrimLeft(item.Ext, "."))
 }
 
+// FilterFile is a function type for filtering files.
 type FilterFile func(f *FileInfo) bool
 
+// DirStats represents statistics about a directory.
 type DirStats struct {
 	TotalFiles  int64
 	TotalDirs   int64
@@ -55,10 +65,12 @@ type DirStats struct {
 	AverageSize int64
 }
 
+// FormatSize returns a human-readable string representation of the total size.
 func (s *DirStats) FormatSize() string {
 	return FormatSize(s.TotalSize)
 }
 
+// FormatSize formats a byte count into a human-readable string (e.g., "1.5 MB").
 func FormatSize(bytes int64) string {
 	const unit = 1024
 	if bytes < unit {

@@ -127,10 +127,12 @@ func addToTar(writer *tar.Writer, basePath, baseInTar string) error {
 			if err != nil {
 				return err
 			}
+			//nolint:exhaustruct
 			hdr := &tar.Header{
-				Name: filepath.Join(baseInTar, file.Name()),
-				Mode: int64(fileInfo.Mode()),
-				Size: int64(len(dat)),
+				Name:    filepath.Join(baseInTar, file.Name()),
+				Mode:    int64(fileInfo.Mode()),
+				Size:    int64(len(dat)),
+				ModTime: fileInfo.ModTime(),
 			}
 			err = writer.WriteHeader(hdr)
 			if err != nil {

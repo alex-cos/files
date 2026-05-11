@@ -3,6 +3,7 @@ package files_test
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"testing"
 	"time"
 
@@ -24,13 +25,13 @@ func TestListDirectories(t *testing.T) {
 
 	assert.Equal(t, []*files.DirInfo{
 		{
-			Path:    `testdata\dummy\directory1`,
+			Path:    filepath.Join("testdata", "dummy", "directory1"),
 			Name:    "directory1",
 			Nbfiles: 1,
 			Size:    9016,
 		},
 		{
-			Path:    `testdata\dummy`,
+			Path:    filepath.Join("testdata", "dummy"),
 			Name:    "dummy",
 			Nbfiles: 2,
 			Size:    1060,
@@ -62,11 +63,11 @@ func TestListFiles(t *testing.T) {
 		}
 		fmt.Fprintf(os.Stdout, "files = %+v\n", items)
 	}
-	assert.Equal(t, `testdata\dummy\dummy1.txt`, items[0].Path)
+	assert.Equal(t, filepath.Join("testdata", "dummy", "dummy1.txt"), items[0].Path)
 	assert.Equal(t, `dummy1.txt`, items[0].Name)
 	assert.Equal(t, `txt`, items[0].GetExt())
 	assert.Equal(t, int64(536), items[0].Size)
-	assert.Equal(t, `testdata\dummy\dummy2.txt`, items[1].Path)
+	assert.Equal(t, filepath.Join("testdata", "dummy", "dummy2.txt"), items[1].Path)
 	assert.Equal(t, `dummy2.txt`, items[1].Name)
 	assert.Equal(t, `txt`, items[1].GetExt())
 	assert.Equal(t, int64(524), items[1].Size)
@@ -119,15 +120,15 @@ func TestWalkFiles(t *testing.T) {
 		}
 		fmt.Fprintf(os.Stdout, "files = %+v\n", items)
 	}
-	assert.Equal(t, `testdata\dummy\directory1\logo.jpg`, items[0].Path)
+	assert.Equal(t, filepath.Join("testdata", "dummy", "directory1", "logo.jpg"), items[0].Path)
 	assert.Equal(t, `logo.jpg`, items[0].Name)
 	assert.Equal(t, `jpg`, items[0].GetExt())
 	assert.Equal(t, int64(9016), items[0].Size)
-	assert.Equal(t, `testdata\dummy\dummy1.txt`, items[1].Path)
+	assert.Equal(t, filepath.Join("testdata", "dummy", "dummy1.txt"), items[1].Path)
 	assert.Equal(t, `dummy1.txt`, items[1].Name)
 	assert.Equal(t, `txt`, items[1].GetExt())
 	assert.Equal(t, int64(536), items[1].Size)
-	assert.Equal(t, `testdata\dummy\dummy2.txt`, items[2].Path)
+	assert.Equal(t, filepath.Join("testdata", "dummy", "dummy2.txt"), items[2].Path)
 	assert.Equal(t, `dummy2.txt`, items[2].Name)
 	assert.Equal(t, `txt`, items[2].GetExt())
 	assert.Equal(t, int64(524), items[2].Size)

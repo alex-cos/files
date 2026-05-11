@@ -3,9 +3,6 @@ package files
 import (
 	"os"
 	"path/filepath"
-	"runtime"
-	"syscall"
-	"time"
 )
 
 func ListDirectories(directory string, filter FilterDir) ([]*DirInfo, error) {
@@ -125,18 +122,4 @@ func WalkFiles(directory string, filter FilterFile) ([]*FileInfo, error) {
 	}
 
 	return files, nil
-}
-
-func getCreatedDate(info os.FileInfo) time.Time {
-	created := info.ModTime()
-	if runtime.GOOS == "windows" {
-		data, ok := info.Sys().(*syscall.Win32FileAttributeData)
-		if ok {
-			created = time.Unix(0, data.CreationTime.Nanoseconds())
-		}
-	} /* else if runtime.GOOS == "linux" {
-		st := info.Sys().(*syscall.Stat_t)
-		created = time.Unix(int64(st.Ctim.Sec), int64(st.Ctim.Nsec))
-	}*/
-	return created
 }

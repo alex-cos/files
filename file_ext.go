@@ -155,7 +155,7 @@ var FileDescriptions = map[string]string{
 }
 
 func GetAllExtensions() []string {
-	extensions := []string{}
+	extensions := make([]string, 0, len(FileDescriptions))
 
 	for ext := range FileDescriptions {
 		extensions = append(extensions, ext)

@@ -1,15 +1,5 @@
 package files
 
-// FileDesc describes a file type with its properties.
-type FileDesc struct {
-	Name         string
-	Category     string
-	MimeType     string
-	IsBinary     bool
-	IsCompressed bool
-	IsExecutable bool
-}
-
 var fileDescriptions = map[string]FileDesc{
 	// Document.
 	DOC: {

@@ -6,6 +6,21 @@ import (
 	"time"
 )
 
+// FileDesc describes a file type with its properties.
+type FileDesc struct {
+	Name         string
+	Category     string
+	MimeType     string
+	IsBinary     bool
+	IsCompressed bool
+	IsExecutable bool
+}
+
+// String returns a string representation of the FileDesc.
+func (item *FileDesc) String() string {
+	return fmt.Sprintf("%+v", *item)
+}
+
 // DirInfo represents information about a directory.
 type DirInfo struct {
 	Path    string

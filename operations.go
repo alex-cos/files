@@ -1,10 +1,18 @@
 package files
 
 import (
+	"crypto/md5"
+	"crypto/sha1"
+	"crypto/sha256"
+	"crypto/sha512"
+	"encoding/hex"
 	"fmt"
+	"hash"
+	"io"
 	"io/fs"
 	"os"
 	"path/filepath"
+	"time"
 )
 
 // CopyFile - copy a source file to a destination file or directory.
@@ -183,7 +191,6 @@ func CopyDir(src, dst string) error {
 				return err
 			}
 		} else {
-			// Skip symlinks.
 			if entry.Type()&fs.ModeSymlink != 0 {
 				continue
 			}
@@ -195,4 +202,130 @@ func CopyDir(src, dst string) error {
 	}
 
 	return nil
+}
+
+// DeleteFile - delete a single file.
+func DeleteFile(path string) error {
+	source := filepath.Clean(path)
+
+	info, err := os.Stat(source)
+	if err != nil {
+		return err
+	}
+
+	if info.IsDir() {
+		return fmt.Errorf("path '%s' is a directory", source)
+	}
+
+	return os.Remove(source)
+}
+
+// DeleteDir - delete a directory and all its contents recursively.
+func DeleteDir(path string) error {
+	source := filepath.Clean(path)
+
+	info, err := os.Stat(source)
+	if err != nil {
+		return err
+	}
+
+	if !info.IsDir() {
+		return fmt.Errorf("path '%s' is not a directory", source)
+	}
+
+	return os.RemoveAll(source)
+}
+
+// FileHash - calculate hash of a file using specified algorithm (md5, sha1, sha256, sha512).
+func FileHash(path, algo string) (string, error) {
+	source := filepath.Clean(path)
+
+	info, err := os.Stat(source)
+	if err != nil {
+		return "", err
+	}
+
+	if info.IsDir() {
+		return "", fmt.Errorf("path '%s' is a directory", source)
+	}
+
+	var h hash.Hash
+	switch algo {
+	case MD5:
+		h = md5.New()
+	case SHA1:
+		h = sha1.New()
+	case SHA256:
+		h = sha256.New()
+	case SHA512:
+		h = sha512.New()
+	default:
+		return "", fmt.Errorf("unsupported algorithm: %s", algo)
+	}
+
+	file, err := os.Open(source)
+	if err != nil {
+		return "", err
+	}
+	defer file.Close()
+
+	_, err = io.Copy(h, file)
+	if err != nil {
+		return "", err
+	}
+
+	hashBytes := h.Sum(nil)
+	return hex.EncodeToString(hashBytes), nil
+}
+
+// GetDirStats - calculate statistics for a directory (total files, size, oldest/newest file).
+func GetDirStats(dir string) (*DirStats, error) {
+	source := filepath.Clean(dir)
+
+	info, err := os.Stat(source)
+	if err != nil {
+		return nil, err
+	}
+
+	if !info.IsDir() {
+		return nil, fmt.Errorf("path '%s' is not a directory", source)
+	}
+
+	var stats DirStats
+	stats.OldestFile = time.Date(9999, 12, 31, 23, 59, 59, 0, time.UTC)
+	stats.NewestFile = time.Date(1970, 1, 1, 0, 0, 0, 0, time.UTC)
+
+	err = filepath.Walk(source, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
+		if info.IsDir() {
+			stats.TotalDirs++
+			return nil
+		}
+
+		stats.TotalFiles++
+		stats.TotalSize += info.Size()
+
+		modTime := info.ModTime()
+		if modTime.Before(stats.OldestFile) {
+			stats.OldestFile = modTime
+		}
+		if modTime.After(stats.NewestFile) {
+			stats.NewestFile = modTime
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	if stats.TotalFiles > 0 {
+		stats.AverageSize = stats.TotalSize / stats.TotalFiles
+	}
+
+	return &stats, nil
 }

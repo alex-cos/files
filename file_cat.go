@@ -1,0 +1,28 @@
+package files
+
+const (
+	CategoryDocument     = "Document"
+	CategorySpreadsheet  = "Spreadsheet"
+	CategoryPresentation = "Presentation"
+	CategoryImage        = "Image"
+	CategoryAudio        = "Audio"
+	CategoryVideo        = "Video"
+	CategoryArchive      = "Archive"
+	CategoryExecutable   = "Executable"
+	CategoryCode         = "Code"
+	CategoryConfig       = "Config"
+	CategoryData         = "Data"
+	CategoryDatabase     = "Database"
+	CategorySecurity     = "Security"
+	CategoryFont         = "Font"
+	Category3D           = "3D"
+	CategoryEbook        = "eBook"
+	CategoryCloud        = "Cloud"
+	CategoryAutomation   = "Automation"
+	CategoryScientist    = "Scientist Data"
+	CategoryVM           = "Virtual Machine"
+	CategoryDiskImage    = "Disk Image"
+	CategoryLog          = "Log"
+	CategoryTemp         = "Temporary"
+	CategoryOther        = "Other"
+)

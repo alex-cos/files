@@ -234,6 +234,8 @@ linters:
         text: G703
       - path: (.+)\.go$
         text: G122
+      - path: (.+)\.go$
+        text: G401|G501|G505
     # Which file paths to exclude: they will be analyzed, but issues from them won't be reported.
     # Default: []
     paths:

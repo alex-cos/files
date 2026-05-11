@@ -46,6 +46,19 @@ func (item *FileInfo) GetExt() string {
 
 type FilterFile func(f *FileInfo) bool
 
+type DirStats struct {
+	TotalFiles  int64
+	TotalDirs   int64
+	TotalSize   int64
+	OldestFile  time.Time
+	NewestFile  time.Time
+	AverageSize int64
+}
+
+func (s *DirStats) FormatSize() string {
+	return FormatSize(s.TotalSize)
+}
+
 func FormatSize(bytes int64) string {
 	const unit = 1024
 	if bytes < unit {

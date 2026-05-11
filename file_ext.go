@@ -1,36 +1,68 @@
 package files
 
-// nolint: varnamelen
 const (
-	// Documents.
+	// Document.
 	DOC  string = "doc"
 	DOCX string = "docx"
+	DOT  string = "dot"
+	DOTX string = "dotx"
+	DOTM string = "dotm"
 	ODT  string = "odt"
+	OTT  string = "ott"
 	PDF  string = "pdf"
 	TXT  string = "txt"
 	RTF  string = "rtf"
 	MD   string = "md"
+	OXPS string = "oxps"
+	XPS  string = "xps"
+	WP   string = "wp"
+	WPD  string = "wpd"
 
-	// Tableurs.
+	// Spreadsheets.
 	XLS  string = "xls"
 	XLSX string = "xlsx"
+	XLSM string = "xlsm"
+	XLT  string = "xlt"
+	XLTX string = "xltx"
 	ODS  string = "ods"
+	SXC  string = "sxc"
 	CSV  string = "csv"
+	TSV  string = "tsv"
 
-	// Présentations.
+	// Presentation.
 	PPT  string = "ppt"
 	PPTX string = "pptx"
+	PPTM string = "pptm"
+	POT  string = "pot"
+	POTX string = "potx"
+	PPS  string = "pps"
+	PPSX string = "ppsx"
 	ODP  string = "odp"
 
-	// Images.
-	JPG  string = "jpg"
-	JPEG string = "jpeg"
-	PNG  string = "png"
-	GIF  string = "gif"
-	BMP  string = "bmp"
-	TIFF string = "tiff"
-	SVG  string = "svg"
-	WEBP string = "webp"
+	// Image.
+	JPG    string = "jpg"
+	JPEG   string = "jpeg"
+	PNG    string = "png"
+	GIF    string = "gif"
+	BMP    string = "bmp"
+	TIFF   string = "tiff"
+	TIFF2  string = "tiff"
+	TIF    string = "tif"
+	SVG    string = "svg"
+	WEBP   string = "webp"
+	ICO    string = "ico"
+	HEIC   string = "heic"
+	HEIF   string = "heif"
+	RAW    string = "raw"
+	CR2    string = "cr2"
+	NEF    string = "nef"
+	ARW    string = "arw"
+	PSD    string = "psd"
+	AI     string = "ai"
+	EPS    string = "eps"
+	INDD   string = "indd"
+	SKETCH string = "sketch"
+	FIGMA  string = "fig"
 
 	// Audio.
 	MP3  string = "mp3"
@@ -38,132 +70,247 @@ const (
 	FLAC string = "flac"
 	AAC  string = "aac"
 	OGG  string = "ogg"
+	WMA  string = "wma"
+	M4A  string = "m4a"
+	AIFF string = "aiff"
+	ALAC string = "alac"
+	OPUS string = "opus"
+	MID  string = "mid"
+	MIDI string = "midi"
 
-	// Vidéo.
-	MP4 string = "mp4"
-	AVI string = "avi"
-	MKV string = "mkv"
-	MOV string = "mov"
-	WMV string = "wmv"
-	FLV string = "flv"
+	// Video.
+	MP4      string = "mp4"
+	AVI      string = "avi"
+	MKV      string = "mkv"
+	MOV      string = "mov"
+	WMV      string = "wmv"
+	FLV      string = "flv"
+	WEBM     string = "webm"
+	M4V      string = "m4v"
+	MPEG     string = "mpeg"
+	MPG      string = "mpg"
+	THREEGP  string = "3gp"
+	THREEG2  string = "3g2"
+	M2TS     string = "m2ts"
+	MTS      string = "mts"
+	VOB      string = "vob"
+	TS_VIDEO string = "ts_video"
 
-	// Archives.
-	ZIP    string = "zip"
-	RAR    string = "rar"
-	TAR    string = "tar"
-	GZ     string = "gz"
-	SEVENZ string = "7z"
+	// Archive/Compressed.
+	ZIP     string = "zip"
+	RAR     string = "rar"
+	TAR     string = "tar"
+	GZ      string = "gz"
+	GZIP    string = "gzip"
+	SEVENZ  string = "7z"
+	BZ2     string = "bz2"
+	XZ      string = "xz"
+	TGZ     string = "tgz"
+	TAR_GZ  string = "tar.gz"
+	TAR_BZ2 string = "tar.bz2"
+	TAR_XZ  string = "tar.xz"
+	ZST     string = "zst"
+	LZ4     string = "lz4"
+	LZH     string = "lzh"
+	CAB     string = "cab"
+	ISO     string = "iso"
 
-	// Exécutables.
-	EXE string = "exe"
-	MSI string = "msi"
-	SH  string = "sh"
-	BAT string = "bat"
-	APP string = "app"
+	// Executable/System.
+	EXE         string = "exe"
+	MSI         string = "msi"
+	SHELLSCRIPT string = "sh"
+	BASH        string = "bash"
+	ZSH         string = "zsh"
+	FISH        string = "fish"
+	BAT         string = "bat"
+	CMD         string = "cmd"
+	PS1         string = "ps1"
+	APP         string = "app"
+	DMG         string = "dmg"
+	DEB         string = "deb"
+	RPM         string = "rpm"
+	APPIMAGE    string = "appimage"
 
-	// Code.
-	HTML string = "html"
-	CSS  string = "css"
-	JS   string = "js"
-	TS   string = "ts"
-	PY   string = "py"
-	GO   string = "go"
-	CPP  string = "cpp"
-	C    string = "c"
-	H    string = "h"
-	HH   string = "hh"
-	JAVA string = "java"
-	PHP  string = "php"
-	SQL  string = "sql"
+	// Code - Web.
+	HTML   string = "html"
+	HTM    string = "htm"
+	CSS    string = "css"
+	SCSS   string = "scss"
+	SASS   string = "sass"
+	LESS   string = "less"
+	JS     string = "js"
+	JSX    string = "jsx"
+	TS     string = "ts"
+	TSX    string = "tsx"
+	VUE    string = "vue"
+	SVELTE string = "svelte"
+	SLIM   string = "slim"
+	ERB    string = "erb"
+
+	// Code - Languages.
+	PY        string = "py"
+	PYW       string = "pyw"
+	GO        string = "go"
+	CPP       string = "cpp"
+	CC        string = "cc"
+	C         string = "c"
+	H         string = "h"
+	HH        string = "hh"
+	HPP       string = "hpp"
+	JAVA      string = "java"
+	CLASS     string = "class"
+	KT        string = "kt"
+	KTS       string = "kts"
+	SCALA     string = "scala"
+	SWIFT     string = "swift"
+	RB        string = "rb"
+	RUBY      string = "ruby"
+	PHP       string = "php"
+	RUST      string = "rust"
+	DART      string = "dart"
+	LUA       string = "lua"
+	PERL      string = "pl"
+	PM        string = "pm"
+	RMARKDOWN string = "rmd"
+
+	// Code - Config/Build.
+	JSON       string = "json"
+	JSON5      string = "json5"
+	JSONC      string = "jsonc"
+	XML        string = "xml"
+	YAML       string = "yaml"
+	YML        string = "yml"
+	TOML       string = "toml"
+	INI        string = "ini"
+	CONF       string = "conf"
+	CONFIG     string = CategoryConfig
+	ENV        string = "env"
+	PROPERTIES string = "properties"
+	PROPS      string = "props"
+	GRADLE     string = "gradle"
+	GRADLE_KTS string = "gradle.kts"
+	MAKEFILE   string = "makefile"
+	CMAKE      string = "cmake"
+	LOCK       string = "lock"
+	PACKAGE    string = "package"
+	HTACCESS   string = "htaccess"
+
+	// Code - Data format.
+	SQL     string = "sql"
+	GRAPHQL string = "graphql"
+	GQL     string = "gql"
+	MDX     string = "mdx"
+
+	// Database.
+	DB      string = "db"
+	SQLITE  string = "sqlite"
+	SQLITE3 string = "sqlite3"
+	DB3     string = "db3"
+
+	// Certificate/Security.
+	PEM string = "pem"
+	CRT string = "crt"
+	CER string = "cer"
+	DER string = "der"
+	KEY string = "key"
+	CSR string = "csr"
+	P12 string = "p12"
+	PFX string = "pfx"
+	P7B string = "p7b"
+	P7C string = "p7c"
+	JKS string = "jks"
+	GPG string = "gpg"
+	PGP string = "pgp"
+	SRL string = "srl"
+	CRL string = "crl"
+
+	// Font.
+	TTF   string = "ttf"
+	OTF   string = "otf"
+	WOFF  string = "woff"
+	WOFF2 string = "woff2"
+	EOT   string = "eot"
+
+	// 3D/CAD.
+	OBJ      string = "obj"
+	FBX      string = "fbx"
+	STL      string = "stl"
+	DWG      string = "dwg"
+	DXF      string = "dxf"
+	BLEND    string = "blend"
+	MAX3D    string = "max"
+	THREEDS  string = "3ds"
+	IGES     string = "iges"
+	IGS      string = "igs"
+	STEP     string = "step"
+	STP      string = "stp"
+	IPT      string = "ipt"
+	IAM      string = "iam"
+	SLDDRPRT string = "sldprt"
+	SLDDRASM string = "slddrw"
+
+	// eBook.
+	EPUB string = "epub"
+	MOBI string = "mobi"
+	AZW  string = "azw"
+	AZW3 string = "azw3"
+	LIT  string = "lit"
+	PRC  string = "prc"
+	FB2  string = "fb2"
+
+	// DevOps/Cloud.
+	TF         string = "tf"
+	TERRAFORM  string = "terraform"
+	ANSIBLE    string = "ansible"
+	DOCKERFILE string = "dockerfile"
+	DOCKER     string = "docker"
+	KUBERNETES string = "k8s"
+	BZL        string = "bzl"
+
+	// Script/Automation.
+	BAKE     string = "rake"
+	FABRIC   string = "fabric"
+	FASTLANE string = "fastlane"
+
+	// Scientist Data.
+	NC     string = "nc"
+	NETCDF string = "netcdf"
+	HDF5   string = "h5"
+	HDF    string = "hdf"
+	FITS   string = "fits"
+
+	// Virtual Machine/Disk Image.
+	IMG  string = "img"
+	VDI  string = "vdi"
+	VMDK string = "vmdk"
+	VHD  string = "vhd"
+	VHDX string = "vhdx"
+
+	// Log/temp.
+	LOG      string = "log"
+	LOGS     string = "logs"
+	LOCKFILE string = "lockfile"
+	PID      string = "pid"
+	DUMP     string = "dump"
+	TMP      string = "tmp"
+	TEMP     string = "temp"
+	BAK      string = "bak"
+	OLD      string = "old"
+	CACHE    string = "cache"
+
+	// Other.
+	TORRENT string = "torrent"
+	PART    string = "part"
+	DESKTOP string = "desktop"
+	LNK     string = "lnk"
 )
 
-// nolint: gochecknoglobals
-var FileDescriptions = map[string]string{
-	// Documents.
-	DOC:  "Microsoft Word Document",
-	DOCX: "Microsoft Word Document (XML)",
-	ODT:  "OpenDocument Text Document",
-	PDF:  "Portable Document Format",
-	TXT:  "Text File",
-	RTF:  "Rich Text Format",
-	MD:   "Markdown Document",
-
-	// Tableurs.
-	XLS:  "Microsoft Excel Spreadsheet",
-	XLSX: "Microsoft Excel Spreadsheet (XML)",
-	ODS:  "OpenDocument Spreadsheet",
-	CSV:  "Comma-Separated Values",
-
-	// Présentations.
-	PPT:  "Microsoft PowerPoint Presentation",
-	PPTX: "Microsoft PowerPoint Presentation (XML)",
-	ODP:  "OpenDocument Presentation",
-
-	// Images.
-	JPG:  "JPEG Image",
-	JPEG: "JPEG Image",
-	PNG:  "Portable Network Graphics",
-	GIF:  "Graphics Interchange Format",
-	BMP:  "Bitmap Image",
-	TIFF: "Tagged Image File Format",
-	SVG:  "Scalable Vector Graphics",
-	WEBP: "WebP Image Format",
-
-	// Audio.
-	MP3:  "MP3 Audio File",
-	WAV:  "Waveform Audio File",
-	FLAC: "Free Lossless Audio Codec",
-	AAC:  "Advanced Audio Codec",
-	OGG:  "Ogg Vorbis Audio File",
-
-	// Vidéo.
-	MP4: "MPEG-4 Video File",
-	AVI: "Audio Video Interleave",
-	MKV: "Matroska Video File",
-	MOV: "QuickTime Movie File",
-	WMV: "Windows Media Video",
-	FLV: "Flash Video File",
-
-	// Archives.
-	ZIP:    "ZIP Archive",
-	RAR:    "RAR Archive",
-	TAR:    "TAR Archive",
-	GZ:     "Gzip Compressed Archive",
-	SEVENZ: "7-Zip Archive",
-
-	// Exécutables.
-	EXE: "Windows Executable File",
-	MSI: "Windows Installer Package",
-	SH:  "Shell Script",
-	BAT: "Batch File",
-	APP: "macOS Application",
-
-	// Code.
-	HTML: "HTML Document",
-	CSS:  "Cascading Style Sheets",
-	JS:   "JavaScript File",
-	TS:   "TypeScript File",
-	PY:   "Python Script",
-	GO:   "Go Source Code",
-	CPP:  "C++ Source Code",
-	C:    "C Source Code",
-	H:    "C Header",
-	HH:   "C++ Header",
-	JAVA: "Java Source Code",
-	PHP:  "PHP Script",
-	SQL:  "SQL Database Query",
-}
-
 func GetAllExtensions() []string {
-	extensions := make([]string, 0, len(FileDescriptions))
+	extensions := make([]string, 0, len(fileDescriptions))
 
-	for ext := range FileDescriptions {
+	for ext := range fileDescriptions {
 		extensions = append(extensions, ext)
 	}
 
 	return extensions
-}
-
-func GetFileDescription(ext string) string {
-	return FileDescriptions[ext]
 }

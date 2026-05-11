@@ -6,7 +6,6 @@ import (
 	"time"
 )
 
-// nolint: gochecknoglobals
 var (
 	// Directory filters.
 
@@ -79,6 +78,17 @@ var (
 	FilterFileByExt = func(ext string) FilterFile {
 		return func(f *FileInfo) bool {
 			return strings.ToLower(ext) == f.GetExt()
+		}
+	}
+
+	// FilterFileByCategory returns a filter that matches files by category.
+	FilterFileByCategory = func(category string) FilterFile {
+		return func(f *FileInfo) bool {
+			ext := f.GetExt()
+			if cat := GetFileDescCat(ext); cat != Unknown {
+				return strings.EqualFold(cat, category)
+			}
+			return false
 		}
 	}
 

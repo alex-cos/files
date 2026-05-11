@@ -2082,6 +2082,18 @@ var fileDescriptions = map[string]FileDesc{
 	},
 }
 
+const Unknown = "Unknown"
+
+func GetAllExtensions() []string {
+	extensions := make([]string, 0, len(fileDescriptions))
+
+	for ext := range fileDescriptions {
+		extensions = append(extensions, ext)
+	}
+
+	return extensions
+}
+
 // GetFileDesc returns the file description for a given extension.
 func GetFileDesc(ext string) (FileDesc, bool) {
 	fd, ok := fileDescriptions[ext]
@@ -2093,7 +2105,7 @@ func GetFileDescName(ext string) string {
 	if fd, ok := fileDescriptions[ext]; ok {
 		return fd.Name
 	}
-	return "Unknown"
+	return Unknown
 }
 
 // GetFileDescCat returns the category for a given extension.
@@ -2101,7 +2113,7 @@ func GetFileDescCat(ext string) string {
 	if fd, ok := fileDescriptions[ext]; ok {
 		return fd.Category
 	}
-	return "Unknown"
+	return Unknown
 }
 
 // IsFileBinary returns whether a file with the given extension is binary.

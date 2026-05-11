@@ -304,13 +304,3 @@ const (
 	DESKTOP string = "desktop"
 	LNK     string = "lnk"
 )
-
-func GetAllExtensions() []string {
-	extensions := make([]string, 0, len(fileDescriptions))
-
-	for ext := range fileDescriptions {
-		extensions = append(extensions, ext)
-	}
-
-	return extensions
-}

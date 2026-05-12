@@ -5,10 +5,10 @@ import (
 	"path/filepath"
 )
 
-// ListDirectories lists all directories recursively within the given directory.
+// ListDirs lists all directories recursively within the given directory.
 // It returns a slice of DirInfo for each directory found. If a filter is provided,
 // only directories matching the filter are returned.
-func ListDirectories(directory string, filter FilterDir) ([]*DirInfo, error) {
+func ListDirs(directory string, filter FilterDir) ([]*DirInfo, error) {
 	dirs := []*DirInfo{}
 	nbFiles := int64(0)
 	size := int64(0)
@@ -21,7 +21,7 @@ func ListDirectories(directory string, filter FilterDir) ([]*DirInfo, error) {
 
 	for _, file := range list {
 		if file.IsDir() {
-			subdirs, err := ListDirectories(filepath.Join(dir, file.Name()), filter)
+			subdirs, err := ListDirs(filepath.Join(dir, file.Name()), filter)
 			if err != nil {
 				return dirs, err
 			}

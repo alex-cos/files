@@ -11,10 +11,10 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestListDirectories(t *testing.T) {
+func TestListDirs(t *testing.T) {
 	t.Parallel()
 
-	dirs, err := files.ListDirectories("./testdata", nil)
+	dirs, err := files.ListDirs("./testdata", nil)
 	assert.NoError(t, err)
 	assert.NotEmpty(t, dirs)
 	if !testing.Short() {

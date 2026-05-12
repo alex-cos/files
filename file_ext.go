@@ -183,7 +183,7 @@ const (
 	TOML       string = "toml"
 	INI        string = "ini"
 	CONF       string = "conf"
-	CONFIG     string = CategoryConfig
+	CONFIG     string = "config"
 	ENV        string = "env"
 	PROPERTIES string = "properties"
 	PROPS      string = "props"

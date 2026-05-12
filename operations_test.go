@@ -140,7 +140,7 @@ func TestDeleteDirNotDir(t *testing.T) {
 
 	err = files.DeleteDir(testFile)
 	assert.Error(t, err)
-	assert.Contains(t, err.Error(), "not a directory")
+	assert.Contains(t, err.Error(), "is a file")
 }
 
 func TestFileHash(t *testing.T) {
@@ -276,7 +276,7 @@ func TestGetDirStatsNotDir(t *testing.T) {
 
 	_, err = files.GetDirStats(testFile)
 	assert.Error(t, err)
-	assert.Contains(t, err.Error(), "not a directory")
+	assert.Contains(t, err.Error(), "is a file")
 }
 
 func TestGetDirStatsEmptyDir(t *testing.T) {
@@ -289,4 +289,138 @@ func TestGetDirStatsEmptyDir(t *testing.T) {
 	assert.Equal(t, int64(0), stats.TotalFiles)
 	assert.Equal(t, int64(1), stats.TotalDirs)
 	assert.Equal(t, int64(0), stats.TotalSize)
+}
+
+func TestMoveFile(t *testing.T) {
+	t.Parallel()
+
+	tempdir := t.TempDir()
+	sourceFile := filepath.Join(tempdir, "source.txt")
+	destFile := filepath.Join(tempdir, "dest.txt")
+
+	err := os.WriteFile(sourceFile, []byte("content"), 0644)
+	assert.NoError(t, err)
+
+	err = files.MoveFile(sourceFile, destFile)
+	assert.NoError(t, err)
+
+	_, err = os.Stat(sourceFile)
+	assert.True(t, os.IsNotExist(err))
+
+	_, err = os.Stat(destFile)
+	assert.NoError(t, err)
+}
+
+func TestMoveFileToDir(t *testing.T) {
+	t.Parallel()
+
+	tempdir := t.TempDir()
+	subdir := filepath.Join(tempdir, "subdir")
+	err := os.MkdirAll(subdir, 0755)
+	assert.NoError(t, err)
+
+	sourceFile := filepath.Join(tempdir, "source.txt")
+	err = os.WriteFile(sourceFile, []byte("content"), 0644)
+	assert.NoError(t, err)
+
+	err = files.MoveFile(sourceFile, subdir)
+	assert.NoError(t, err)
+
+	_, err = os.Stat(sourceFile)
+	assert.True(t, os.IsNotExist(err))
+
+	_, err = os.Stat(filepath.Join(subdir, "source.txt"))
+	assert.NoError(t, err)
+}
+
+func TestMoveFileNotFound(t *testing.T) {
+	t.Parallel()
+
+	err := files.MoveFile("/nonexistent/file.txt", "/tmp/dest.txt")
+	assert.Error(t, err)
+}
+
+func TestMoveFileIsDir(t *testing.T) {
+	t.Parallel()
+
+	tempdir := t.TempDir()
+
+	err := files.MoveFile(tempdir, "/tmp/dest.txt")
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "is a directory")
+}
+
+func TestMoveDir(t *testing.T) {
+	t.Parallel()
+
+	tempdir := t.TempDir()
+	subdir := filepath.Join(tempdir, "source")
+	err := os.MkdirAll(subdir, 0755)
+	assert.NoError(t, err)
+
+	file := filepath.Join(subdir, "file.txt")
+	err = os.WriteFile(file, []byte("content"), 0644)
+	assert.NoError(t, err)
+
+	dest := filepath.Join(tempdir, "dest")
+
+	err = files.MoveDir(subdir, dest)
+	assert.NoError(t, err)
+
+	_, err = os.Stat(subdir)
+	assert.True(t, os.IsNotExist(err))
+
+	_, err = os.Stat(dest)
+	assert.NoError(t, err)
+
+	_, err = os.Stat(filepath.Join(dest, "file.txt"))
+	assert.NoError(t, err)
+}
+
+func TestMoveDirToExistingDir(t *testing.T) {
+	t.Parallel()
+
+	tempdir := t.TempDir()
+	sourceDir := filepath.Join(tempdir, "source")
+	subdir := filepath.Join(tempdir, "target", "subdir")
+
+	err := os.MkdirAll(sourceDir, 0755)
+	assert.NoError(t, err)
+
+	err = os.MkdirAll(subdir, 0755)
+	assert.NoError(t, err)
+
+	file := filepath.Join(sourceDir, "file.txt")
+	err = os.WriteFile(file, []byte("content"), 0644)
+	assert.NoError(t, err)
+
+	err = files.MoveDir(sourceDir, filepath.Join(tempdir, "target"))
+	assert.NoError(t, err)
+
+	_, err = os.Stat(sourceDir)
+	assert.True(t, os.IsNotExist(err))
+
+	_, err = os.Stat(filepath.Join(tempdir, "target", "source", "file.txt"))
+	assert.NoError(t, err)
+}
+
+func TestMoveDirNotFound(t *testing.T) {
+	t.Parallel()
+
+	err := files.MoveDir("/nonexistent/dir", "/tmp/dest")
+	assert.Error(t, err)
+}
+
+func TestMoveDirNotDir(t *testing.T) {
+	t.Parallel()
+
+	tempdir := t.TempDir()
+	testFile := filepath.Join(tempdir, "test.txt")
+
+	err := os.WriteFile(testFile, []byte("content"), 0644)
+	assert.NoError(t, err)
+
+	err = files.MoveDir(testFile, "/tmp/dest")
+	assert.Error(t, err)
+	assert.Contains(t, err.Error(), "is a file")
 }

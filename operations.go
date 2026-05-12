@@ -21,11 +21,17 @@ func CopyFile(src, dst string) error {
 
 	infosrc, err := os.Stat(source)
 	if err != nil {
+		if os.IsNotExist(err) {
+			return fmt.Errorf("%w: %s", ErrFileNotFound, source)
+		}
+		if os.IsPermission(err) {
+			return fmt.Errorf("%w: %s", ErrPermissionDenied, source)
+		}
 		return err
 	}
 
 	if infosrc.IsDir() {
-		return fmt.Errorf("source file '%s' is a directory", source)
+		return fmt.Errorf("%w: %s", ErrFileIsDir, source)
 	}
 
 	destination, err := sanitizeFilePath(filepath.Dir(dst), filepath.Base(dst))
@@ -53,6 +59,10 @@ func CopyFile(src, dst string) error {
 
 // ConcatFiles concatenates all given files into one.
 func ConcatFiles(sources []string, dst string, perm os.FileMode) error {
+	if len(sources) == 0 {
+		return ErrEmptySource
+	}
+
 	var buffer []byte
 
 	for _, src := range sources {
@@ -60,11 +70,17 @@ func ConcatFiles(sources []string, dst string, perm os.FileMode) error {
 
 		info, err := os.Stat(source)
 		if err != nil {
+			if os.IsNotExist(err) {
+				return fmt.Errorf("%w: %s", ErrFileNotFound, source)
+			}
+			if os.IsPermission(err) {
+				return fmt.Errorf("%w: %s", ErrPermissionDenied, source)
+			}
 			return err
 		}
 
 		if info.IsDir() {
-			return fmt.Errorf("source file '%s' is a directory", src)
+			return fmt.Errorf("%w: %s", ErrFileIsDir, src)
 		}
 
 		b, err := os.ReadFile(source)
@@ -98,7 +114,7 @@ func ConcatDir(src, dst string, filter FilterFile, perm os.FileMode) error {
 	}
 
 	if !info.IsDir() {
-		return fmt.Errorf("source file '%s' is not a directory", src)
+		return fmt.Errorf("%w: %s", ErrDirIsFile, src)
 	}
 
 	err = filepath.Walk(source, func(path string, info os.FileInfo, err error) error {
@@ -157,11 +173,16 @@ func CopyDir(src, dst string) error {
 
 	info, err := os.Stat(src)
 	if err != nil {
+		if os.IsNotExist(err) {
+			return fmt.Errorf("%w: %s", ErrDirNotFound, src)
+		}
+		if os.IsPermission(err) {
+			return fmt.Errorf("%w: %s", ErrPermissionDenied, src)
+		}
 		return err
 	}
-
 	if !info.IsDir() {
-		return fmt.Errorf("source file '%s' is not a directory", src)
+		return fmt.Errorf("%w: %s", ErrDirIsFile, src)
 	}
 
 	_, err = os.Stat(dst)
@@ -210,11 +231,16 @@ func DeleteFile(path string) error {
 
 	info, err := os.Stat(source)
 	if err != nil {
+		if os.IsNotExist(err) {
+			return fmt.Errorf("%w: %s", ErrFileNotFound, source)
+		}
+		if os.IsPermission(err) {
+			return fmt.Errorf("%w: %s", ErrPermissionDenied, source)
+		}
 		return err
 	}
-
 	if info.IsDir() {
-		return fmt.Errorf("path '%s' is a directory", source)
+		return fmt.Errorf("%w: %s", ErrFileIsDir, source)
 	}
 
 	return os.Remove(source)
@@ -226,14 +252,89 @@ func DeleteDir(path string) error {
 
 	info, err := os.Stat(source)
 	if err != nil {
+		if os.IsNotExist(err) {
+			return fmt.Errorf("%w: %s", ErrDirNotFound, source)
+		}
+		if os.IsPermission(err) {
+			return fmt.Errorf("%w: %s", ErrPermissionDenied, source)
+		}
+		return err
+	}
+	if !info.IsDir() {
+		return fmt.Errorf("%w: %s", ErrDirIsFile, source)
+	}
+
+	return os.RemoveAll(source)
+}
+
+// MoveFile moves a file to a destination file or directory.
+func MoveFile(src, dst string) error {
+	source := filepath.Clean(src)
+
+	info, err := os.Stat(source)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return fmt.Errorf("%w: %s", ErrFileNotFound, source)
+		}
+		if os.IsPermission(err) {
+			return fmt.Errorf("%w: %s", ErrPermissionDenied, source)
+		}
+		return err
+	}
+
+	if info.IsDir() {
+		return fmt.Errorf("%w: %s", ErrFileIsDir, source)
+	}
+
+	destination, err := sanitizeFilePath(filepath.Dir(dst), filepath.Base(dst))
+	if err != nil {
+		return err
+	}
+
+	infodest, err := os.Stat(dst)
+	if err == nil && infodest.IsDir() {
+		destination = filepath.Join(destination, filepath.Base(source))
+	}
+
+	err = os.Rename(source, destination)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// MoveDir moves a directory and all its contents to a destination directory.
+func MoveDir(src, dst string) error {
+	src = filepath.Clean(src)
+	dst = filepath.Clean(dst)
+
+	info, err := os.Stat(src)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return fmt.Errorf("%w: %s", ErrDirNotFound, src)
+		}
+		if os.IsPermission(err) {
+			return fmt.Errorf("%w: %s", ErrPermissionDenied, src)
+		}
 		return err
 	}
 
 	if !info.IsDir() {
-		return fmt.Errorf("path '%s' is not a directory", source)
+		return fmt.Errorf("%w: %s", ErrDirIsFile, src)
 	}
 
-	return os.RemoveAll(source)
+	dstInfo, err := os.Stat(dst)
+	if err == nil && dstInfo.IsDir() {
+		dst = filepath.Join(dst, filepath.Base(src))
+	}
+
+	err = os.Rename(src, dst)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // FileHash calculates the hash of a file using the specified algorithm (md5, sha1, sha256, sha512).
@@ -242,11 +343,16 @@ func FileHash(path, algo string) (string, error) {
 
 	info, err := os.Stat(source)
 	if err != nil {
+		if os.IsNotExist(err) {
+			return "", fmt.Errorf("%w: %s", ErrFileNotFound, source)
+		}
+		if os.IsPermission(err) {
+			return "", fmt.Errorf("%w: %s", ErrPermissionDenied, source)
+		}
 		return "", err
 	}
-
 	if info.IsDir() {
-		return "", fmt.Errorf("path '%s' is a directory", source)
+		return "", fmt.Errorf("%w: %s", ErrFileIsDir, source)
 	}
 
 	var h hash.Hash
@@ -284,11 +390,16 @@ func GetDirStats(dir string) (*DirStats, error) {
 
 	info, err := os.Stat(source)
 	if err != nil {
+		if os.IsNotExist(err) {
+			return nil, fmt.Errorf("%w: %s", ErrDirNotFound, source)
+		}
+		if os.IsPermission(err) {
+			return nil, fmt.Errorf("%w: %s", ErrPermissionDenied, source)
+		}
 		return nil, err
 	}
-
 	if !info.IsDir() {
-		return nil, fmt.Errorf("path '%s' is not a directory", source)
+		return nil, fmt.Errorf("%w: %s", ErrDirIsFile, source)
 	}
 
 	var stats DirStats

@@ -20,7 +20,6 @@ const (
 	CategoryCloud        = "Cloud"
 	CategoryAutomation   = "Automation"
 	CategoryScientist    = "Scientist Data"
-	CategoryVM           = "Virtual Machine"
 	CategoryDiskImage    = "Disk Image"
 	CategoryLog          = "Log"
 	CategoryTemp         = "Temporary"

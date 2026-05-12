@@ -16,5 +16,5 @@ func sanitizeFilePath(base, subPath string) (string, error) {
 		return v, nil
 	}
 
-	return "", fmt.Errorf("filepath is tainted: %s", subPath)
+	return "", fmt.Errorf("%w: %s", ErrPathIsTainted, subPath)
 }

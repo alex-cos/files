@@ -92,6 +92,14 @@ var (
 		}
 	}
 
+	// FilterFileByMimeType returns a filter that matches files by MIME type.
+	FilterFileByMimeType = func(mimeType string) FilterFile {
+		return func(f *FileInfo) bool {
+			ext := f.GetExt()
+			return GetMimeType(ext) == mimeType
+		}
+	}
+
 	// FilterFileBySizeGreater returns a filter that matches files larger than the given size.
 	FilterFileBySizeGreater = func(size int64) FilterFile {
 		return func(f *FileInfo) bool {

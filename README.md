@@ -67,6 +67,19 @@ err := files.CopyFile("file.txt", "/path/to/directory")
 err := files.CopyDir("/source/dir", "/destination/dir")
 ```
 
+### Move Files
+
+```go
+// Move a single file
+err := files.MoveFile("source.txt", "destination.txt")
+
+// Move to a directory (keeps filename)
+err := files.MoveFile("file.txt", "/path/to/directory")
+
+// Move entire directory
+err := files.MoveDir("/source/dir", "/destination/dir")
+```
+
 ### Delete Files
 
 ```go
@@ -123,6 +136,12 @@ filter := files.FilterFileByUpdatedAfter(time.Now().AddDate(0, 0, -7))
 
 // Filter by regex
 filter := files.FilterFileByRegEx(*regexp.MustCompile(`^test.*\.txt$`))
+
+// Filter by category
+filter := files.FilterFileByCategory(files.CategoryCode)
+
+// Filter by MIME type
+filter := files.FilterFileByMimeType(files.MimeJSON)
 
 // Combine filters
 combined := func(f *files.FileInfo) bool {
@@ -248,6 +267,7 @@ files.CategoryDiskImage
 files.CategoryLog
 files.CategoryTemp
 files.CategoryOther
+files.Unknown
 ```
 
 ## Data Types

@@ -40,8 +40,15 @@ func CopyFile(src, dst string) error {
 	}
 
 	infodest, err := os.Stat(dst)
-	if err == nil && infodest.IsDir() {
+	switch {
+	case err != nil:
+		if !os.IsNotExist(err) {
+			return err
+		}
+	case infodest.IsDir():
 		destination = filepath.Join(destination, filepath.Base(source))
+	default:
+		return fmt.Errorf("%w: %s", ErrFileAlreadyExist, dst)
 	}
 
 	input, err := os.ReadFile(source)

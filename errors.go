@@ -15,6 +15,9 @@ var (
 	// ErrDirIsFile is returned when a directory path points to a file.
 	ErrDirIsFile = errors.New("path is a file")
 
+	// ErrFileAlreadyExist is returned when a file already exist.
+	ErrFileAlreadyExist = errors.New("file already exist")
+
 	// ErrEmptySource is returned when no source files are provided.
 	ErrEmptySource = errors.New("no source files provided")
 

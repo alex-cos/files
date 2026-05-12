@@ -46,7 +46,6 @@ const (
 	GIF    string = "gif"
 	BMP    string = "bmp"
 	TIFF   string = "tiff"
-	TIFF2  string = "tiff"
 	TIF    string = "tif"
 	SVG    string = "svg"
 	WEBP   string = "webp"

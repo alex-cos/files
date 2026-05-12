@@ -61,14 +61,14 @@ func UnTar(tarfile, dest string) error {
 			return err
 		}
 		if hdr.FileInfo().IsDir() {
-			err := os.MkdirAll(path, os.ModePerm)
+			err := os.MkdirAll(path, 0755)
 			if err != nil {
 				return err
 			}
 			continue
 		}
 
-		if err := os.MkdirAll(filepath.Dir(path), os.ModePerm); err != nil {
+		if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
 			return err
 		}
 

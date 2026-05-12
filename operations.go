@@ -59,11 +59,11 @@ func CopyFile(src, dst string) error {
 
 // ConcatFiles concatenates all given files into one.
 func ConcatFiles(sources []string, dst string, perm os.FileMode) error {
+	var buffer []byte
+
 	if len(sources) == 0 {
 		return ErrEmptySource
 	}
-
-	var buffer []byte
 
 	for _, src := range sources {
 		source := filepath.Clean(src)
@@ -110,6 +110,12 @@ func ConcatDir(src, dst string, filter FilterFile, perm os.FileMode) error {
 
 	info, err := os.Stat(source)
 	if err != nil {
+		if os.IsNotExist(err) {
+			return fmt.Errorf("%w: %s", ErrDirNotFound, src)
+		}
+		if os.IsPermission(err) {
+			return fmt.Errorf("%w: %s", ErrPermissionDenied, src)
+		}
 		return err
 	}
 

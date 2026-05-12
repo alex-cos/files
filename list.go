@@ -1,6 +1,7 @@
 package files
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 )
@@ -13,6 +14,21 @@ func ListDirs(directory string, filter FilterDir) ([]*DirInfo, error) {
 	nbFiles := int64(0)
 	size := int64(0)
 	dir := filepath.Clean(directory)
+
+	info, err := os.Stat(dir)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return dirs, fmt.Errorf("%w: %s", ErrDirNotFound, dir)
+		}
+		if os.IsPermission(err) {
+			return dirs, fmt.Errorf("%w: %s", ErrPermissionDenied, dir)
+		}
+		return dirs, err
+	}
+
+	if !info.IsDir() {
+		return dirs, fmt.Errorf("%w: %s", ErrDirIsFile, dir)
+	}
 
 	list, err := os.ReadDir(dir)
 	if err != nil {
@@ -57,8 +73,24 @@ func ListDirs(directory string, filter FilterDir) ([]*DirInfo, error) {
 // only files matching the filter are returned.
 func ListFiles(directory string, filter FilterFile) ([]*FileInfo, error) {
 	files := []*FileInfo{}
+	dir := filepath.Clean(directory)
 
-	list, err := os.ReadDir(directory)
+	info, err := os.Stat(dir)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return files, fmt.Errorf("%w: %s", ErrDirNotFound, dir)
+		}
+		if os.IsPermission(err) {
+			return files, fmt.Errorf("%w: %s", ErrPermissionDenied, dir)
+		}
+		return files, err
+	}
+
+	if !info.IsDir() {
+		return files, fmt.Errorf("%w: %s", ErrDirIsFile, dir)
+	}
+
+	list, err := os.ReadDir(dir)
 	if err != nil {
 		return files, err
 	}
@@ -74,7 +106,7 @@ func ListFiles(directory string, filter FilterFile) ([]*FileInfo, error) {
 		}
 
 		fileInfo := &FileInfo{
-			Path:    filepath.Join(directory, file.Name()),
+			Path:    filepath.Join(dir, file.Name()),
 			Name:    file.Name(),
 			Ext:     filepath.Ext(file.Name()),
 			Size:    info.Size(),
@@ -96,9 +128,24 @@ func ListFiles(directory string, filter FilterFile) ([]*FileInfo, error) {
 // only files matching the filter are returned.
 func WalkFiles(directory string, filter FilterFile) ([]*FileInfo, error) {
 	files := []*FileInfo{}
+	dir := filepath.Clean(directory)
 
-	err := filepath.Walk(
-		directory,
+	info, err := os.Stat(dir)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return files, fmt.Errorf("%w: %s", ErrDirNotFound, dir)
+		}
+		if os.IsPermission(err) {
+			return files, fmt.Errorf("%w: %s", ErrPermissionDenied, dir)
+		}
+		return files, err
+	}
+
+	if !info.IsDir() {
+		return files, fmt.Errorf("%w: %s", ErrDirIsFile, dir)
+	}
+
+	err = filepath.Walk(dir,
 		func(path string, info os.FileInfo, err error) error {
 			if err != nil {
 				return err

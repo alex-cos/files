@@ -9,6 +9,13 @@ import (
 var (
 	// Directory filters.
 
+	// FilterDirAll returns a filter that matches all directories.
+	FilterDirAll = func() FilterDir {
+		return func(f *DirInfo) bool {
+			return true
+		}
+	}
+
 	// FilterDirByName returns a filter that matches directories by exact name.
 	FilterDirByName = func(name string) FilterDir {
 		return func(f *DirInfo) bool {
@@ -59,6 +66,13 @@ var (
 	}
 
 	// File filters.
+
+	// FilterFileAll returns a filter that matches all files.
+	FilterFileAll = func() FilterFile {
+		return func(f *FileInfo) bool {
+			return true
+		}
+	}
 
 	// FilterFileByName returns a filter that matches files by exact name.
 	FilterFileByName = func(name string) FilterFile {

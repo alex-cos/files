@@ -22,7 +22,7 @@ func TestTar(t *testing.T) {
 	assert.NoError(t, err)
 	targetFile := filepath.Join(tempdir, "testdata", "dummy.tar")
 
-	err = files.TarAll("./testdata/dummy", targetFile)
+	err = files.TarAll(filepath.Join(".", "testdata", "dummy"), targetFile)
 	assert.NoError(t, err)
 
 	items, err := files.TarList(targetFile)
@@ -32,6 +32,6 @@ func TestTar(t *testing.T) {
 		fmt.Fprintf(os.Stdout, "dirs = %+v\n", items)
 	}
 
-	err = files.UnTar(targetFile, filepath.Join(tempdir, "unzip"))
+	err = files.UnTar(targetFile, filepath.Join(tempdir, "untar"))
 	assert.NoError(t, err)
 }

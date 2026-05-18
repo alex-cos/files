@@ -26,4 +26,7 @@ var (
 
 	// ErrPathIsTainted is returned when a path is tainted.
 	ErrPathIsTainted = errors.New("filepath is tainted")
+
+	// ErrFileIsTooBig is returned when the size is to high.
+	ErrFileIsTooBig = errors.New("file exceeds max size")
 )

@@ -51,50 +51,27 @@ func CopyFile(src, dst string) error {
 		return fmt.Errorf("%w: %s", ErrFileAlreadyExist, dst)
 	}
 
-	input, err := os.ReadFile(source)
+	srcFile, err := os.Open(source)
 	if err != nil {
 		return err
 	}
+	defer srcFile.Close()
 
-	err = os.WriteFile(destination, input, infosrc.Mode())
+	dstFile, err := os.OpenFile(destination, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, infosrc.Mode())
 	if err != nil {
 		return err
 	}
+	defer dstFile.Close()
 
-	return nil
+	_, err = io.Copy(dstFile, srcFile)
+
+	return err
 }
 
 // ConcatFiles concatenates all given files into one.
 func ConcatFiles(sources []string, dst string, perm os.FileMode) error {
-	var buffer []byte
-
 	if len(sources) == 0 {
 		return ErrEmptySource
-	}
-
-	for _, src := range sources {
-		source := filepath.Clean(src)
-
-		info, err := os.Stat(source)
-		if err != nil {
-			if os.IsNotExist(err) {
-				return fmt.Errorf("%w: %s", ErrFileNotFound, source)
-			}
-			if os.IsPermission(err) {
-				return fmt.Errorf("%w: %s", ErrPermissionDenied, source)
-			}
-			return err
-		}
-
-		if info.IsDir() {
-			return fmt.Errorf("%w: %s", ErrFileIsDir, src)
-		}
-
-		b, err := os.ReadFile(source)
-		if err != nil {
-			return err
-		}
-		buffer = append(buffer, b...)
 	}
 
 	destination, err := sanitizeFilePath(filepath.Dir(dst), filepath.Base(dst))
@@ -102,9 +79,24 @@ func ConcatFiles(sources []string, dst string, perm os.FileMode) error {
 		return err
 	}
 
-	err = os.WriteFile(destination, buffer, perm)
+	dstFile, err := os.OpenFile(destination, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, perm)
 	if err != nil {
 		return err
+	}
+	defer dstFile.Close()
+
+	for _, src := range sources {
+		source := filepath.Clean(src)
+		srcFile, err := os.Open(source)
+		if err != nil {
+			return err
+		}
+
+		_, err = io.Copy(dstFile, srcFile)
+		srcFile.Close()
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
@@ -113,7 +105,6 @@ func ConcatFiles(sources []string, dst string, perm os.FileMode) error {
 // ConcatDir concatenates all files matching the given filter in a source directory.
 func ConcatDir(src, dst string, filter FilterFile, perm os.FileMode) error {
 	var source = filepath.Clean(src)
-	var buffer []byte
 
 	info, err := os.Stat(source)
 	if err != nil {
@@ -130,7 +121,18 @@ func ConcatDir(src, dst string, filter FilterFile, perm os.FileMode) error {
 		return fmt.Errorf("%w: %s", ErrDirIsFile, src)
 	}
 
-	err = filepath.Walk(source, func(path string, info os.FileInfo, err error) error {
+	destination, err := sanitizeFilePath(filepath.Dir(dst), filepath.Base(dst))
+	if err != nil {
+		return err
+	}
+
+	dstFile, err := os.OpenFile(destination, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, perm)
+	if err != nil {
+		return err
+	}
+	defer dstFile.Close()
+
+	return filepath.Walk(source, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
@@ -153,30 +155,15 @@ func ConcatDir(src, dst string, filter FilterFile, perm os.FileMode) error {
 			return nil
 		}
 
-		b, e := os.ReadFile(cleanPath)
-		if e != nil {
-			return e
+		srcFile, err := os.Open(cleanPath)
+		if err != nil {
+			return err
 		}
-		buffer = append(buffer, b...)
+		_, err = io.Copy(dstFile, srcFile)
+		srcFile.Close()
 
-		return nil
+		return err
 	})
-
-	if err != nil {
-		return err
-	}
-
-	destination, err := sanitizeFilePath(filepath.Dir(dst), filepath.Base(dst))
-	if err != nil {
-		return err
-	}
-
-	err = os.WriteFile(destination, buffer, perm)
-	if err != nil {
-		return err
-	}
-
-	return nil
 }
 
 // CopyDir copies the entire source directory and sub-directories to a destination directory.
@@ -305,8 +292,15 @@ func MoveFile(src, dst string) error {
 	}
 
 	infodest, err := os.Stat(dst)
-	if err == nil && infodest.IsDir() {
+	switch {
+	case err != nil:
+		if !os.IsNotExist(err) {
+			return err
+		}
+	case infodest.IsDir():
 		destination = filepath.Join(destination, filepath.Base(source))
+	default:
+		return fmt.Errorf("%w: %s", ErrFileAlreadyExist, dst)
 	}
 
 	err = os.Rename(source, destination)

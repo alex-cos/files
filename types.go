@@ -25,6 +25,7 @@ func (item *FileDesc) String() string {
 type DirInfo struct {
 	Path    string
 	Name    string
+	NbDirs  int64
 	Nbfiles int64
 	Size    int64
 }

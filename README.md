@@ -182,26 +182,26 @@ dirs, err := files.ListDirs("/path/to/parent", nil)
 
 ```go
 // Create a ZIP archive
-err := files.CreateZip("/output/archive.zip", "/source/dir")
+err := files.ZipAll("/source/dir", "/output/archive.zip")
 
 // Extract a ZIP archive
-err := files.ExtractZip("/archive.zip", "/output/dir")
+err := files.UnZip("/archive.zip", "/output/dir")
+
+// List files in a ZIP archive
+names, err := files.ZipList("/archive.zip")
 ```
 
 ### TAR Archives
 
 ```go
 // Create a TAR archive
-err := files.CreateTar("/output/archive.tar", "/source/dir")
-
-// Create a gzip-compressed TAR archive
-err := files.CreateTarGz("/output/archive.tar.gz", "/source/dir")
+err := files.TarAll("/source/dir", "/output/archive.tar")
 
 // Extract a TAR archive
-err := files.ExtractTar("/archive.tar", "/output/dir")
+err := files.UnTar("/archive.tar", "/output/dir")
 
-// Extract a gzip-compressed TAR archive
-err := files.ExtractTarGz("/archive.tar.gz", "/output/dir")
+// List files in a TAR archive
+names, err := files.TarList("/archive.tar")
 ```
 
 ## File Descriptions
@@ -263,12 +263,13 @@ files.CategorySecurity
 files.CategoryFont
 files.Category3D
 files.CategoryEbook
+files.CategoryCloud
+files.CategoryAutomation
 files.CategoryScientist
 files.CategoryDiskImage
 files.CategoryLog
 files.CategoryTemp
 files.CategoryOther
-files.Unknown
 ```
 
 ## Data Types
@@ -279,6 +280,7 @@ files.Unknown
 type DirInfo struct {
     Path    string
     Name    string
+    NbDirs  int64
     Nbfiles int64
     Size    int64
 }

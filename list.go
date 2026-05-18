@@ -11,8 +11,6 @@ import (
 // only directories matching the filter are returned.
 func ListDirs(directory string, filter FilterDir) ([]*DirInfo, error) {
 	dirs := []*DirInfo{}
-	nbFiles := int64(0)
-	size := int64(0)
 	dir := filepath.Clean(directory)
 
 	info, err := os.Stat(dir)
@@ -35,13 +33,16 @@ func ListDirs(directory string, filter FilterDir) ([]*DirInfo, error) {
 		return dirs, err
 	}
 
+	nbDirs := int64(0)
+	nbFiles := int64(0)
+	size := int64(0)
 	for _, file := range list {
 		if file.IsDir() {
+			nbDirs++
 			subdirs, err := ListDirs(filepath.Join(dir, file.Name()), filter)
 			if err != nil {
 				return dirs, err
 			}
-
 			dirs = append(dirs, subdirs...)
 		} else {
 			nbFiles++
@@ -56,6 +57,7 @@ func ListDirs(directory string, filter FilterDir) ([]*DirInfo, error) {
 	dirInfo := &DirInfo{
 		Path:    dir,
 		Name:    filepath.Base(dir),
+		NbDirs:  nbDirs,
 		Nbfiles: nbFiles,
 		Size:    size,
 	}

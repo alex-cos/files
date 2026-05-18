@@ -22,7 +22,7 @@ func TestZip(t *testing.T) {
 	assert.NoError(t, err)
 	targetFile := filepath.Join(tempdir, "testdata", "dummy.zip")
 
-	err = files.ZipAll("./testdata/dummy", targetFile)
+	err = files.ZipAll(filepath.Join(".", "testdata", "dummy"), targetFile)
 	assert.NoError(t, err)
 
 	items, err := files.ZipList(targetFile)

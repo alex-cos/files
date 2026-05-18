@@ -14,7 +14,8 @@ import (
 func TestListDirs(t *testing.T) {
 	t.Parallel()
 
-	dirs, err := files.ListDirs("./testdata", nil)
+	source := filepath.Join(".", "testdata")
+	dirs, err := files.ListDirs(source, nil)
 	assert.NoError(t, err)
 	assert.NotEmpty(t, dirs)
 	if !testing.Short() {
@@ -27,27 +28,39 @@ func TestListDirs(t *testing.T) {
 		{
 			Path:    filepath.Join("testdata", "dummy", "directory1"),
 			Name:    "directory1",
+			NbDirs:  0,
 			Nbfiles: 1,
 			Size:    9016,
 		},
 		{
 			Path:    filepath.Join("testdata", "dummy"),
 			Name:    "dummy",
+			NbDirs:  1,
 			Nbfiles: 2,
 			Size:    1060,
 		},
 		{
 			Path:    `testdata`,
 			Name:    "testdata",
+			NbDirs:  1,
 			Nbfiles: 0,
 			Size:    0,
 		}}, dirs)
+
+	source = filepath.Join(".", "testdata", "xxxxxx")
+	_, err = files.ListDirs(source, nil)
+	assert.Error(t, err)
+
+	source = filepath.Join(".", "testdata", "dummy", "dummy1.txt")
+	_, err = files.ListDirs(source, nil)
+	assert.Error(t, err)
 }
 
 func TestListFiles(t *testing.T) {
 	t.Parallel()
 
-	items, err := files.ListFiles("./testdata/dummy", nil)
+	source := filepath.Join(".", "testdata", "dummy")
+	items, err := files.ListFiles(source, nil)
 	assert.NoError(t, err)
 	assert.Len(t, items, 2)
 	if !testing.Short() {
@@ -72,39 +85,48 @@ func TestListFiles(t *testing.T) {
 	assert.Equal(t, `txt`, items[1].GetExt())
 	assert.Equal(t, int64(524), items[1].Size)
 
-	items, err = files.ListFiles("./testdata/dummy", files.FilterFileByName("dummy1.txt"))
+	items, err = files.ListFiles(source, files.FilterFileByName("dummy1.txt"))
 	assert.NoError(t, err)
 	assert.Len(t, items, 1)
 	if !testing.Short() {
 		fmt.Fprintf(os.Stdout, "files = %+v\n", items)
 	}
 
-	items, err = files.ListFiles("./testdata/dummy", files.FilterFileByExt(files.TXT))
+	items, err = files.ListFiles(source, files.FilterFileByExt(files.TXT))
 	assert.NoError(t, err)
 	assert.Len(t, items, 2)
 	if !testing.Short() {
 		fmt.Fprintf(os.Stdout, "files = %+v\n", items)
 	}
 
-	items, err = files.ListFiles("./testdata/dummy", files.FilterFileBySizeGreater(530))
+	items, err = files.ListFiles(source, files.FilterFileBySizeGreater(530))
 	assert.NoError(t, err)
 	assert.Len(t, items, 1)
 	if !testing.Short() {
 		fmt.Fprintf(os.Stdout, "files = %+v\n", items)
 	}
 
-	items, err = files.ListFiles("./testdata/dummy", files.FilterFileBySizeLower(530))
+	items, err = files.ListFiles(source, files.FilterFileBySizeLower(530))
 	assert.NoError(t, err)
 	assert.Len(t, items, 1)
 	if !testing.Short() {
 		fmt.Fprintf(os.Stdout, "files = %+v\n", items)
 	}
+
+	source = filepath.Join(".", "testdata", "xxxxxx")
+	_, err = files.ListFiles(source, files.FilterFileAll())
+	assert.Error(t, err)
+
+	source = filepath.Join(".", "testdata", "dummy", "dummy1.txt")
+	_, err = files.ListFiles(source, files.FilterFileAll())
+	assert.Error(t, err)
 }
 
 func TestWalkFiles(t *testing.T) {
 	t.Parallel()
 
-	items, err := files.WalkFiles("./testdata", nil)
+	source := filepath.Join(".", "testdata")
+	items, err := files.WalkFiles(source, nil)
 	assert.NoError(t, err)
 	assert.Len(t, items, 3)
 	if !testing.Short() {
@@ -133,31 +155,39 @@ func TestWalkFiles(t *testing.T) {
 	assert.Equal(t, `txt`, items[2].GetExt())
 	assert.Equal(t, int64(524), items[2].Size)
 
-	items, err = files.WalkFiles("./testdata", files.FilterFileByName("dummy1.txt"))
+	items, err = files.WalkFiles(source, files.FilterFileByName("dummy1.txt"))
 	assert.NoError(t, err)
 	assert.Len(t, items, 1)
 	if !testing.Short() {
 		fmt.Fprintf(os.Stdout, "files = %+v\n", items)
 	}
 
-	items, err = files.WalkFiles("./testdata", files.FilterFileByExt(files.TXT))
+	items, err = files.WalkFiles(source, files.FilterFileByExt(files.TXT))
 	assert.NoError(t, err)
 	assert.Len(t, items, 2)
 	if !testing.Short() {
 		fmt.Fprintf(os.Stdout, "files = %+v\n", items)
 	}
 
-	items, err = files.WalkFiles("./testdata", files.FilterFileBySizeGreater(530))
+	items, err = files.WalkFiles(source, files.FilterFileBySizeGreater(530))
 	assert.NoError(t, err)
 	assert.Len(t, items, 2)
 	if !testing.Short() {
 		fmt.Fprintf(os.Stdout, "files = %+v\n", items)
 	}
 
-	items, err = files.WalkFiles("./testdata", files.FilterFileBySizeLower(530))
+	items, err = files.WalkFiles(source, files.FilterFileBySizeLower(530))
 	assert.NoError(t, err)
 	assert.Len(t, items, 1)
 	if !testing.Short() {
 		fmt.Fprintf(os.Stdout, "files = %+v\n", items)
 	}
+
+	source = filepath.Join(".", "testdata", "xxxxxx")
+	_, err = files.WalkFiles(source, files.FilterFileAll())
+	assert.Error(t, err)
+
+	source = filepath.Join(".", "testdata", "dummy", "dummy1.txt")
+	_, err = files.WalkFiles(source, files.FilterFileAll())
+	assert.Error(t, err)
 }

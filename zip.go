@@ -2,8 +2,6 @@ package files
 
 import (
 	"archive/zip"
-	"errors"
-	"io"
 	"os"
 	"path/filepath"
 )
@@ -54,19 +52,17 @@ func UnZip(zipfile, dest string) error {
 		if err != nil {
 			return err
 		}
-		defer dstFile.Close()
 
 		fileInArchive, err := file.Open()
 		if err != nil {
+			dstFile.Close()
 			return err
 		}
-		defer fileInArchive.Close()
 
-		_, err = io.CopyN(dstFile, fileInArchive, maxDecompressedSize)
+		err = copyIO(dstFile, fileInArchive)
+		fileInArchive.Close()
+		dstFile.Close()
 		if err != nil {
-			if errors.Is(err, io.EOF) {
-				continue
-			}
 			return err
 		}
 	}

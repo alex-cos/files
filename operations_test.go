@@ -20,6 +20,19 @@ func TestCopyFile(t *testing.T) {
 
 	err = files.CopyFile(source, target)
 	assert.NoError(t, err)
+
+	source = filepath.Join(".", "testdata", "dummy", "xxxxx.txt")
+	err = files.CopyFile(source, target)
+	assert.Error(t, err)
+
+	source = filepath.Join(".", "testdata", "dummy")
+	err = files.CopyFile(source, target)
+	assert.Error(t, err)
+
+	source = filepath.Join(".", "testdata", "dummy", "dummy1.txt")
+	target = filepath.Join(".", "testdata", "dummy", "dummy2.txt")
+	err = files.CopyFile(source, target)
+	assert.Error(t, err)
 }
 
 func TestConcatFiles(t *testing.T) {
@@ -49,6 +62,14 @@ func TestConcatDir(t *testing.T) {
 
 	err = files.ConcatDir(source, target, files.FilterFileByExt(files.TXT), 0755)
 	assert.NoError(t, err)
+
+	source = filepath.Join(".", "testdata", "xxxxxx")
+	err = files.ConcatDir(source, target, files.FilterFileByExt(files.TXT), 0755)
+	assert.Error(t, err)
+
+	source = filepath.Join(".", "testdata", "dummy", "dummy1.txt")
+	err = files.ConcatDir(source, target, files.FilterFileByExt(files.TXT), 0755)
+	assert.Error(t, err)
 }
 
 func TestCopyDir(t *testing.T) {
@@ -62,6 +83,14 @@ func TestCopyDir(t *testing.T) {
 
 	err = files.CopyDir(source, target)
 	assert.NoError(t, err)
+
+	source = filepath.Join(".", "testdata", "xxxxxx")
+	err = files.CopyDir(source, target)
+	assert.Error(t, err)
+
+	source = filepath.Join(".", "testdata", "dummy", "dummy1.txt")
+	err = files.CopyDir(source, target)
+	assert.Error(t, err)
 }
 
 func TestDeleteFile(t *testing.T) {
@@ -348,6 +377,15 @@ func TestMoveFileIsDir(t *testing.T) {
 	err := files.MoveFile(tempdir, "/tmp/dest.txt")
 	assert.Error(t, err)
 	assert.Contains(t, err.Error(), "is a directory")
+}
+
+func TestMoveFileAlreadyExist(t *testing.T) {
+	t.Parallel()
+
+	source := filepath.Join(".", "testdata", "dummy", "dummy1.txt")
+	target := filepath.Join(".", "testdata", "dummy", "dummy2.txt")
+	err := files.MoveFile(source, target)
+	assert.Error(t, err)
 }
 
 func TestMoveDir(t *testing.T) {

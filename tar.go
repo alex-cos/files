@@ -71,18 +71,14 @@ func UnTar(tarfile, dest string) error {
 		if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
 			return err
 		}
-
 		dstFile, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, hdr.FileInfo().Mode())
 		if err != nil {
 			return err
 		}
-		defer dstFile.Close()
 
-		_, err = io.CopyN(dstFile, archive, maxDecompressedSize)
+		err = copyIO(dstFile, archive)
+		dstFile.Close()
 		if err != nil {
-			if errors.Is(err, io.EOF) {
-				continue
-			}
 			return err
 		}
 	}

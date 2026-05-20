@@ -45,12 +45,13 @@ func (item *DirInfo) FormatSize() string {
 
 // FileInfo represents information about a file.
 type FileInfo struct {
-	Path    string
-	Name    string
-	Ext     string
-	Size    int64
-	Created time.Time
-	Updated time.Time
+	Path         string
+	Name         string
+	Ext          string
+	Size         int64
+	Created      time.Time
+	Updated      time.Time
+	IsExecutable bool
 }
 
 // String returns a string representation of the FileInfo.

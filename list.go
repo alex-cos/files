@@ -107,13 +107,15 @@ func ListFiles(directory string, filter FilterFile) ([]*FileInfo, error) {
 			return files, err
 		}
 
+		fullPath := filepath.Join(dir, file.Name())
 		fileInfo := &FileInfo{
-			Path:    filepath.Join(dir, file.Name()),
-			Name:    file.Name(),
-			Ext:     filepath.Ext(file.Name()),
-			Size:    info.Size(),
-			Created: getCreatedDate(info),
-			Updated: info.ModTime(),
+			Path:         fullPath,
+			Name:         file.Name(),
+			Ext:          filepath.Ext(file.Name()),
+			Size:         info.Size(),
+			Created:      getCreatedDate(info),
+			Updated:      info.ModTime(),
+			IsExecutable: isExecutableFile(fullPath),
 		}
 		if filter != nil && !filter(fileInfo) {
 			continue
@@ -158,12 +160,13 @@ func WalkFiles(directory string, filter FilterFile) ([]*FileInfo, error) {
 			}
 
 			fileInfo := &FileInfo{
-				Path:    path,
-				Name:    info.Name(),
-				Ext:     filepath.Ext(path),
-				Size:    info.Size(),
-				Created: getCreatedDate(info),
-				Updated: info.ModTime(),
+				Path:         path,
+				Name:         info.Name(),
+				Ext:          filepath.Ext(path),
+				Size:         info.Size(),
+				Created:      getCreatedDate(info),
+				Updated:      info.ModTime(),
+				IsExecutable: isExecutableFile(path),
 			}
 
 			if filter != nil && !filter(fileInfo) {

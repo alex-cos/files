@@ -290,12 +290,13 @@ type DirInfo struct {
 
 ```go
 type FileInfo struct {
-    Path    string
-    Name    string
-    Ext     string
-    Size    int64
-    Created time.Time
-    Updated time.Time
+    Path         string
+    Name         string
+    Ext          string
+    Size         int64
+    Created      time.Time
+    Updated      time.Time
+    IsExecutable bool
 }
 ```
 

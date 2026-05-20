@@ -143,12 +143,13 @@ func ConcatDir(src, dst string, filter FilterFile, perm os.FileMode) error {
 		}
 
 		fileInfo := &FileInfo{
-			Path:    cleanPath,
-			Name:    info.Name(),
-			Ext:     filepath.Ext(cleanPath),
-			Size:    info.Size(),
-			Created: getCreatedDate(info),
-			Updated: info.ModTime(),
+			Path:         cleanPath,
+			Name:         info.Name(),
+			Ext:          filepath.Ext(cleanPath),
+			Size:         info.Size(),
+			Created:      getCreatedDate(info),
+			Updated:      info.ModTime(),
+			IsExecutable: isExecutableFile(cleanPath),
 		}
 
 		if info.IsDir() || (filter != nil && !filter(fileInfo)) {
